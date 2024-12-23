@@ -11,22 +11,16 @@ use Illuminate\Support\Facades\Session;
 class LinksController extends Controller
 {
     /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    /**
      * Show the unique link.
      *
-     * @return Renderable
+     * @return Renderable|RedirectResponse
      */
-    public function home(): Renderable
+    public function home(): Renderable|RedirectResponse
     {
+        if (!auth()->check()) {
+            return redirect(route('register'));
+        }
+
         return view('links.home', [
             'link' => $this->getLink(),
         ]);
@@ -39,10 +33,17 @@ class LinksController extends Controller
      */
     public function link(): Renderable
     {
-        $link = $this->getLink();
+        $link = $this->getLink(
+            request()->route('key'),
+        );
+
+        if (!$link) {
+            abort(404);
+        }
 
         return view('links.link', [
             'link' => $link,
+            'results' => $link->results()->orderBy('id', 'desc')->take(3),
         ]);
     }
 
@@ -95,6 +96,51 @@ class LinksController extends Controller
         Session::flash('message', 'Link successfully deactivated.');
 
         return redirect('home');
+    }
+
+    /**
+     * @return RedirectResponse
+     */
+    public function play(): RedirectResponse
+    {
+        $link = $this->getLink(
+            request()->route('key'),
+        );
+
+        if (!$link) {
+            abort(404);
+        }
+
+        $percent = 0;
+        $score = rand(1, 1000);
+        $win = $score % 2 == 0;
+
+        if ($win) {
+            if ($score > 900) {
+                $percent = 70;
+            } elseif ($score > 600) {
+                $percent = 50;
+            } elseif ($score > 300) {
+                $percent = 30;
+            } else {
+                $percent = 10;
+            }
+        }
+
+        $result = $link->results()->create([
+            'score' => $score,
+            'win' => $win,
+            'sum' => (int) round($score * $percent),
+        ]);
+
+        if ($win) {
+            $amount = number_format($result->sum / 100, 2);
+            Session::flash('message', 'Congratulations, you won $' . $amount . '! (Score: '. $result->score .').');
+        } else {
+            Session::flash('message', 'Unfortunately you didn\'t win (Score: '. $result->score .').');
+        }
+
+        return redirect(route('links.link', $link->key));
     }
 
     /**

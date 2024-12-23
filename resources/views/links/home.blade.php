@@ -7,10 +7,6 @@
                 <div class="card">
                     <div class="card-header">{{ __('Your Link') }}</div>
                     <div class="card-body">
-                        @if (Session::has('message'))
-                            <p class="alert {{ Session::get('alert-class', 'alert-success') }}">{{ Session::get('message') }}</p>
-                        @endif
-
                         @if ($link)
                             <a href="{{route('links.link', ['key' => $link->key])}}">
                                 {{ route('links.link', ['key' => $link->key]) }}

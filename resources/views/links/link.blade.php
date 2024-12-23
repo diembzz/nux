@@ -6,7 +6,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <div class="float-start">{{ __('Your Link') }}</div>
+                        <div class="float-start">{{ __('Link') }}</div>
                         <div class="float-end">
                             @if ($link)
                                 <a href="{{ route('links.regenerate', ['key' => $link->key]) }}"
@@ -17,14 +17,27 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        @if (Session::has('message'))
-                            <p class="alert {{ Session::get('alert-class', 'alert-success') }}">{{ Session::get('message') }}</p>
-                        @endif
-
                         @if ($link)
-                            <a href="{{route('links.link', ['key' => $link->key])}}">
-                                {{ route('links.link', ['key' => $link->key]) }}
-                            </a>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{{route('links.link', ['key' => $link->key])}}">
+                                        {{ route('links.link', ['key' => $link->key]) }}
+                                    </a>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-md-6 offset-md-3 mt-3 text-center">
+                                    <a href="{{ route('links.play', ['key' => $link->key])  }}" class="btn btn-success">
+                                        Imfeelinglucky
+                                    </a>
+                                    <a class="btn btn-warning">
+                                        History
+                                    </a>
+                                </div>
+                            </div>
                         @else
                             <p>No active link found.</p>
                         @endif
