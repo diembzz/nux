@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\LinksController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,10 +15,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [RegisterController::class, 'register'])->name('register.submit');
+Route::get('/home', [LinksController::class, 'home'])->name('home');
+Route::get('/link/{key}', [LinksController::class, 'link'])->name('links.link');
+Route::get('/link/{key}/regenerate', [LinksController::class, 'regenerate'])->name('links.regenerate');
+Route::get('/link/{key}/deactivate', [LinksController::class, 'deactivate'])->name('links.deactivate');

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
 /**
- * @property integer $id
- * @property integer $user_id
+ * @property int $id
+ * @property int $user_id
  * @property string $key
  * @property string $expired_at
  * @property string $created_at
@@ -19,7 +20,7 @@ class Link extends Model
     /**
      * @var array
      */
-    protected $fillable = ['user_id', 'key', 'expired_at', 'created_at', 'updated_at'];
+    protected $fillable = ['user_id', 'key', 'active', 'expired_at', 'created_at', 'updated_at'];
 
     /**
      * @return BelongsTo
@@ -27,5 +28,14 @@ class Link extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo('App\Models\User');
+    }
+
+    public static function generateKey(): string
+    {
+        do {
+            $key = Str::random(32);
+        } while (Link::where('key', $key)->exists());
+
+        return $key;
     }
 }

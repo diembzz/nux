@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
@@ -13,12 +12,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $updated_at
  * @property Link[] $links
  */
-class User extends Model
+class User extends \Illuminate\Foundation\Auth\User
 {
     /**
      * @var array
      */
-    protected $fillable = ['username', 'phone_number', 'created_at', 'updated_at'];
+    protected $fillable = ['username', 'phone_number'];
 
     /**
      * @return HasMany

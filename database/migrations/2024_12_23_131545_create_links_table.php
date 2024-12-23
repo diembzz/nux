@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('key')->unique();
+            $table->boolean('active')->default(true);
             $table->timestamp('expired_at')->nullable();
             $table->timestamps();
         });
