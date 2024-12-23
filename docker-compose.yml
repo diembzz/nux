@@ -1,0 +1,39 @@
+services:
+  nginx:
+    container_name: nux-nginx
+    image: nginx:1.27-alpine
+    ports:
+      - "80:80"
+    restart: on-failure
+    volumes:
+      - .docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./:/var/www/html
+    networks:
+      - backend
+    depends_on:
+      - app
+
+  app:
+    container_name: nux-app
+    build:
+      dockerfile: .docker/app/Dockerfile
+    restart: on-failure
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - backend
+    depends_on:
+      - sqlite
+
+  sqlite:
+    container_name: nux-sqlite
+    image: alpine/sqlite:latest
+    volumes:
+      - ./database:/database
+    networks:
+      - backend
+volumes:
+  pgsql:
+    driver: local
+networks:
+  backend:
