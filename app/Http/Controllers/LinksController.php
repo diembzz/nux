@@ -43,7 +43,7 @@ class LinksController extends Controller
 
         return view('links.link', [
             'link' => $link,
-            'results' => $link->results()->orderBy('id', 'desc')->take(3),
+            'results' => $link->results()->orderBy('id', 'desc')->limit(3)->get(),
         ]);
     }
 
