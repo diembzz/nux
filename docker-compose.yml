@@ -22,16 +22,7 @@ services:
       - ./:/var/www/html
     networks:
       - backend
-    depends_on:
-      - sqlite
 
-  sqlite:
-    container_name: nux-sqlite
-    image: alpine/sqlite:latest
-    volumes:
-      - ./database:/database
-    networks:
-      - backend
 volumes:
   pgsql:
     driver: local
